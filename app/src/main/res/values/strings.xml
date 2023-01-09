@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">BinInfo</string>
+    <string name="show_info">Show info</string>
+    <string name="enter_bin">Enter the first 8 digits of a card number (BIN/IIN)</string>
+    <string name="clear_history">Clear the history</string>
+    <string name="notAvailable">n/a</string>
+    <string name="scheme">Scheme/Network: %s</string>
+    <string name="brand">Brand: %s</string>
+    <string name="type_prepaid">Type: %s, prepaid: %s</string>
+    <string name="country">Country: %s</string>
+    <string name="lan_lon">Latitude: %s, longitude: %s</string>
+    <string name="numeric_alpha2_emoji">Numeric: %s, alpha2: %s, emoji: %s</string>
+    <string name="currency">Currency: %s</string>
+    <string name="bank">Bank: %s</string>
+    <string name="city">City: %s</string>
+    <string name="length_luhn">Card number length: %s, luhn: %s</string>
+    <string name="phone">Phone: %s</string>
+    <string name="history">History:</string>
+</resources>
