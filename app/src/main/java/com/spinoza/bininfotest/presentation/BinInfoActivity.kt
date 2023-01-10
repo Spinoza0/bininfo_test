@@ -61,18 +61,18 @@ class BinInfoActivity : AppCompatActivity() {
                 textViewBrand.text = String.format(getString(R.string.brand), brand ?: notAvailable)
                 if (number == null) {
                     textViewCardNumberLengthLuhn.visibility = View.GONE
-                } else {
-                    number?.let {
-                        textViewCardNumberLengthLuhn.text =
-                            String.format(getString(R.string.length_luhn),
-                                it.length.toString(),
-                                it.luhn.toString())
-                    }
+                } else number?.let {
+                    textViewCardNumberLengthLuhn.text =
+                        String.format(getString(R.string.length_luhn),
+                            it.length?.toString() ?: notAvailable,
+                            it.luhn?.toString() ?: notAvailable
+                        )
                 }
+
                 textViewTypePrepaid.text = String.format(
                     getString(R.string.type_prepaid),
                     type ?: notAvailable,
-                    prepaid.toString()
+                    prepaid?.toString() ?: notAvailable
                 )
 
                 country?.let { setCountry(it) }
