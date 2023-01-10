@@ -57,11 +57,11 @@ class EnterBinActivity : AppCompatActivity() {
     }
 
     private fun setObservers() {
-        viewModel.historyListLiveData.observe(this) {
+        viewModel.history.observe(this) {
             setHistoryVisibility(it.isEmpty())
             historyAdapter.submitList(it)
         }
-        viewModel.getIsError().observe(this) {
+        viewModel.isError.observe(this) {
             Toast.makeText(this@EnterBinActivity, it, Toast.LENGTH_LONG).show()
         }
     }

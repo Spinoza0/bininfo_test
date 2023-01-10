@@ -13,25 +13,29 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 class BinInfoViewModel(private val apiService: BinApiService) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
-    private val binInfo = MutableLiveData<BinInfo>()
-    private val isLoading = MutableLiveData(false)
-    private val isError: MutableLiveData<String> = MutableLiveData()
+    private val _binInfo = MutableLiveData<BinInfo>()
+    private val _isLoading = MutableLiveData(false)
+    private val _isError: MutableLiveData<String> = MutableLiveData()
 
-    fun getBinInfo(): LiveData<BinInfo> = binInfo
-    fun getIsLoading(): LiveData<Boolean> = isLoading
-    fun getIsError(): LiveData<String> = isError
+    val binInfo: LiveData<BinInfo>
+        get() = _binInfo
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
+    val isError: LiveData<String>
+        get() = _isError
+
 
     fun load(binValue: String) {
-        val loading = isLoading.value
+        val loading = _isLoading.value
         loading?.let {
             if (!it) {
                 val disposable: Disposable = apiService.getBinInfo(binValue)
                     .subscribeOn(Schedulers.io())
-                    .doOnSubscribe { isLoading.value = true }
+                    .doOnSubscribe { _isLoading.value = true }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doAfterTerminate { isLoading.value = false }
-                    .subscribe({ loadedBinInfo -> binInfo.value = loadedBinInfo })
-                    { throwable -> isError.value = throwable.message }
+                    .doAfterTerminate { _isLoading.value = false }
+                    .subscribe({ loadedBinInfo -> _binInfo.value = loadedBinInfo })
+                    { throwable -> _isError.value = throwable.message }
                 compositeDisposable.add(disposable)
             }
         }

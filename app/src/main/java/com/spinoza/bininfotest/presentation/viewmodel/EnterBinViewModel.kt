@@ -11,18 +11,19 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 class EnterBinViewModel(private val db: BinInfoDao) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
-    val historyListLiveData = db.getHistory()
+    val history = db.getHistory()
 
-    private val isError: MutableLiveData<String> = MutableLiveData()
-    fun getIsError(): LiveData<String> = isError
+    private val _isError: MutableLiveData<String> = MutableLiveData()
+    val isError: LiveData<String>
+        get() = _isError
 
     fun insertToHistory(bin: Bin) {
         var needToInsert = true
-        historyListLiveData.value?.let { needToInsert = !it.contains(bin) }
+        history.value?.let { needToInsert = !it.contains(bin) }
         if (needToInsert) {
             val disposable: Disposable = db.insertToHistory(bin)
                 .subscribeOn(Schedulers.io())
-                .subscribe({}) { throwable -> isError.value = throwable.message }
+                .subscribe({}) { throwable -> _isError.value = throwable.message }
             compositeDisposable.add(disposable)
         }
     }
@@ -30,7 +31,7 @@ class EnterBinViewModel(private val db: BinInfoDao) : ViewModel() {
     fun clearHistory() {
         val disposable: Disposable = db.clearHistory()
             .subscribeOn(Schedulers.io())
-            .subscribe({}) { throwable -> isError.value = throwable.message }
+            .subscribe({}) { throwable -> _isError.value = throwable.message }
         compositeDisposable.add(disposable)
     }
 

@@ -43,12 +43,12 @@ class BinInfoActivity : AppCompatActivity() {
     }
 
     private fun setObservers(binValue: String) {
-        viewModel.getIsLoading().observe(this) { isLoading ->
+        viewModel.isLoading.observe(this) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
-        viewModel.getBinInfo().observe(this) { setContent(binValue, it) }
-        viewModel.getIsError().observe(this) { showError(binValue, it) }
+        viewModel.binInfo.observe(this) { setContent(binValue, it) }
+        viewModel.isError.observe(this) { showError(binValue, it) }
     }
 
     private fun setContent(binValue: String, binInfo: BinInfo) {
