@@ -5,7 +5,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.spinoza.bininfotest.domain.Bin
-import com.spinoza.bininfotest.domain.BinInfoDao
 
 @Database(entities = [Bin::class], version = 1, exportSchema = false)
 abstract class DataBase : RoomDatabase() {
@@ -25,5 +24,5 @@ abstract class DataBase : RoomDatabase() {
         }
     }
 
-    abstract fun binInfoDao(): BinInfoDao
+    abstract fun binInfoDao(): DatabaseDao
 }

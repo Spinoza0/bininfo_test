@@ -1,6 +1,5 @@
 package com.spinoza.bininfotest.data
 
-import com.spinoza.bininfotest.domain.BinApiService
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory

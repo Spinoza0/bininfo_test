@@ -3,15 +3,14 @@ package com.spinoza.bininfotest.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.spinoza.bininfotest.domain.BinApiService
+import com.spinoza.bininfotest.domain.ApiService
 import com.spinoza.bininfotest.domain.BinInfo
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-
-class BinInfoViewModel(private val apiService: BinApiService) : ViewModel() {
+class BinInfoViewModel(private val apiService: ApiService) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
     private val _binInfo = MutableLiveData<BinInfo>()
     private val _isLoading = MutableLiveData(false)
