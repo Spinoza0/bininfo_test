@@ -13,9 +13,12 @@
         android:layout_margin="8dp"
         android:autofillHints="creditCardNumber"
         android:hint="@string/enter_bin"
-        android:inputType="numberDecimal"
+        android:inputType="number"
         android:maxLength="8"
+        android:minHeight="48dp"
+        android:textColorHint="#00838F"
         android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,14 +58,26 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@id/buttonShowInfo"
-        app:layout_constraintTop_toBottomOf="@id/buttonShowInfo" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonShowInfo" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewHistory"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/textViewHistory"
-        tools:listitem="@layout/item_history" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHistory">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewHistory"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_history" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

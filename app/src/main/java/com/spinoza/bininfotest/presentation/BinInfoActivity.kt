@@ -55,7 +55,7 @@ class BinInfoActivity : AppCompatActivity() {
         notAvailable = getString(R.string.notAvailable)
         with(binding) {
             with(binInfo) {
-                textViewBin.text = String.format("BIN: %s", binValue)
+                textViewBin.text = String.format(getString(R.string.bin), binValue)
                 textViewScheme.text =
                     String.format(getString(R.string.scheme), scheme ?: notAvailable)
                 textViewBrand.text = String.format(getString(R.string.brand), brand ?: notAvailable)
@@ -150,9 +150,9 @@ class BinInfoActivity : AppCompatActivity() {
 
     private fun showError(binValue: String, errorMsg: String) {
         with(binding) {
-            textViewBin.text = String.format("BIN: %s", binValue)
+            textViewBin.text = String.format(getString(R.string.bin), binValue)
             textViewScheme.text =
-                String.format("Error of getting info: %s", errorMsg)
+                String.format(getString(R.string.error), errorMsg)
             textViewScheme.setTextColor(ContextCompat.getColor(this@BinInfoActivity,
                 android.R.color.holo_red_dark))
         }

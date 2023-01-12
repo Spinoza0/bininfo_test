@@ -16,4 +16,6 @@
     <string name="length_luhn">Card number length: %s, luhn: %s</string>
     <string name="phone">Phone: %s</string>
     <string name="history">History:</string>
+    <string name="bin">BIN: %s</string>
+    <string name="error">Error of getting info: %s</string>
 </resources>
