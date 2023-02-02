@@ -6,29 +6,32 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.spinoza.bininfotest.data.DataBase
+import com.spinoza.bininfotest.data.repository.HistoryRepositoryImpl
 import com.spinoza.bininfotest.databinding.ActivityEnterBinBinding
-import com.spinoza.bininfotest.domain.Bin
+import com.spinoza.bininfotest.domain.model.Bin
 import com.spinoza.bininfotest.presentation.adapters.HistoryAdapter
 import com.spinoza.bininfotest.presentation.viewmodel.EnterBinViewModel
 import com.spinoza.bininfotest.presentation.viewmodel.EnterBinViewModelFactory
 
 class EnterBinActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityEnterBinBinding
-    private lateinit var viewModel: EnterBinViewModel
-    private lateinit var historyAdapter: HistoryAdapter
+
+    private val binding by lazy {
+        ActivityEnterBinBinding.inflate(layoutInflater)
+    }
+
+    private val viewModel by lazy {
+        ViewModelProvider(
+            this,
+            EnterBinViewModelFactory(HistoryRepositoryImpl(application))
+        )[EnterBinViewModel::class.java]
+    }
+
+    private val historyAdapter by lazy { HistoryAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityEnterBinBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(
-            this,
-            EnterBinViewModelFactory(DataBase.getInstance(application).binInfoDao())
-        )[EnterBinViewModel::class.java]
-
-        historyAdapter = HistoryAdapter()
         binding.recyclerViewHistory.adapter = historyAdapter
 
         setListeners()
@@ -38,7 +41,6 @@ class EnterBinActivity : AppCompatActivity() {
     private fun setListeners() {
         with(binding) {
             historyAdapter.onBinClickListener = { showInfoActivity(it.value) }
-
 
             editTextBin.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {

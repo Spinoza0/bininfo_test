@@ -9,28 +9,32 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.spinoza.bininfotest.R
-import com.spinoza.bininfotest.data.BinApiFactory
+import com.spinoza.bininfotest.data.repository.BinRepositoryImpl
 import com.spinoza.bininfotest.databinding.ActivityBinInfoBinding
-import com.spinoza.bininfotest.domain.Bank
-import com.spinoza.bininfotest.domain.BinInfo
-import com.spinoza.bininfotest.domain.Country
+import com.spinoza.bininfotest.domain.model.Bank
+import com.spinoza.bininfotest.domain.model.BinInfo
+import com.spinoza.bininfotest.domain.model.Country
 import com.spinoza.bininfotest.presentation.viewmodel.BinInfoViewModel
 import com.spinoza.bininfotest.presentation.viewmodel.BinInfoViewModelFactory
 
 class BinInfoActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityBinInfoBinding
-    private lateinit var viewModel: BinInfoViewModel
-    private lateinit var notAvailable: String
+
+    private val binding by lazy {
+        ActivityBinInfoBinding.inflate(layoutInflater)
+    }
+
+    private val viewModel by lazy {
+        ViewModelProvider(
+            this,
+            BinInfoViewModelFactory(BinRepositoryImpl())
+        )[BinInfoViewModel::class.java]
+    }
+
+    private val notAvailable by lazy { getString(R.string.notAvailable) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityBinInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        viewModel = ViewModelProvider(
-            this,
-            BinInfoViewModelFactory(BinApiFactory.apiService)
-        )[BinInfoViewModel::class.java]
 
         if (intent.hasExtra(EXTRA_BIN)) {
             intent.getStringExtra(EXTRA_BIN)?.let {
@@ -52,7 +56,6 @@ class BinInfoActivity : AppCompatActivity() {
     }
 
     private fun setContent(binValue: String, binInfo: BinInfo) {
-        notAvailable = getString(R.string.notAvailable)
         with(binding) {
             with(binInfo) {
                 textViewBin.text = String.format(getString(R.string.bin), binValue)
@@ -63,7 +66,8 @@ class BinInfoActivity : AppCompatActivity() {
                     textViewCardNumberLengthLuhn.visibility = View.GONE
                 } else number?.let {
                     textViewCardNumberLengthLuhn.text =
-                        String.format(getString(R.string.length_luhn),
+                        String.format(
+                            getString(R.string.length_luhn),
                             it.length?.toString() ?: notAvailable,
                             it.luhn?.toString() ?: notAvailable
                         )
@@ -95,8 +99,10 @@ class BinInfoActivity : AppCompatActivity() {
             textViewLatLon.text =
                 String.format(getString(R.string.lan_lon), latitude, longitude)
             textViewLatLon.setOnClickListener {
-                openLink(Intent.ACTION_VIEW, "http://maps.google.com/maps?q=loc:" +
-                        "$latitude,$longitude ($countryName)")
+                openLink(
+                    Intent.ACTION_VIEW, "http://maps.google.com/maps?q=loc:" +
+                            "$latitude,$longitude ($countryName)"
+                )
             }
             textViewNumericAlpha2Emoji.text = String.format(
                 getString(R.string.numeric_alpha2_emoji),
@@ -153,8 +159,12 @@ class BinInfoActivity : AppCompatActivity() {
             textViewBin.text = String.format(getString(R.string.bin), binValue)
             textViewScheme.text =
                 String.format(getString(R.string.error), errorMsg)
-            textViewScheme.setTextColor(ContextCompat.getColor(this@BinInfoActivity,
-                android.R.color.holo_red_dark))
+            textViewScheme.setTextColor(
+                ContextCompat.getColor(
+                    this@BinInfoActivity,
+                    android.R.color.holo_red_dark
+                )
+            )
         }
     }
 
@@ -162,9 +172,9 @@ class BinInfoActivity : AppCompatActivity() {
         private const val EXTRA_BIN = "bin"
 
         fun newIntent(context: Context, binValue: String): Intent {
-            val intent = Intent(context, BinInfoActivity::class.java)
-            intent.putExtra(EXTRA_BIN, binValue)
-            return intent
+            return Intent(context, BinInfoActivity::class.java).apply {
+                putExtra(EXTRA_BIN, binValue)
+            }
         }
     }
 }

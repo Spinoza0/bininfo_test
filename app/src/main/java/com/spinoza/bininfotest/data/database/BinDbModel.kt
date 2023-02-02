@@ -1,12 +1,10 @@
-package com.spinoza.bininfotest.domain
+package com.spinoza.bininfotest.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "bins")
-data class Bin(
+data class BinDbModel(
     @PrimaryKey
-    @SerializedName("value")
     val value: String,
 ) : java.io.Serializable

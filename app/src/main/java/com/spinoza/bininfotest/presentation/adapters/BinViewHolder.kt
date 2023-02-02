@@ -1,10 +1,6 @@
 package com.spinoza.bininfotest.presentation.adapters
 
-import android.view.View
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.spinoza.bininfotest.R
+import com.spinoza.bininfotest.databinding.ItemHistoryBinding
 
-class BinViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val textViewHistoryItem: TextView = itemView.findViewById(R.id.textViewHistoryItem)
-}
+class BinViewHolder(val binding: ItemHistoryBinding) : RecyclerView.ViewHolder(binding.root)

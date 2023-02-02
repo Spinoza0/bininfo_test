@@ -1,4 +1,4 @@
-package com.spinoza.bininfotest.domain
+package com.spinoza.bininfotest.domain.model
 
 class Country(
     var numeric: String?,

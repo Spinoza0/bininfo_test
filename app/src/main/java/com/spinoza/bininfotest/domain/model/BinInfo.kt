@@ -1,7 +1,7 @@
-package com.spinoza.bininfotest.domain
+package com.spinoza.bininfotest.domain.model
 
 class BinInfo(
-    var number: Number?,
+    var number: BinNumber?,
     var scheme: String?,
     var type: String?,
     var brand: String?,
