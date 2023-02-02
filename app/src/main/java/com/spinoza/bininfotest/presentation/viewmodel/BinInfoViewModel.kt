@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.spinoza.bininfotest.domain.ApiService
-import com.spinoza.bininfotest.domain.BinInfo
+import com.spinoza.bininfotest.domain.repository.BinRepository
+import com.spinoza.bininfotest.domain.model.BinInfo
 import kotlinx.coroutines.launch
 
-class BinInfoViewModel(private val apiService: ApiService) : ViewModel() {
+class BinInfoViewModel(private val binRepository: BinRepository) : ViewModel() {
     private val _binInfo = MutableLiveData<BinInfo>()
     private val _isLoading = MutableLiveData(false)
     private val _isError: MutableLiveData<String> = MutableLiveData()
@@ -27,7 +27,7 @@ class BinInfoViewModel(private val apiService: ApiService) : ViewModel() {
                 if (!it) {
                     _isLoading.value = true
                     try {
-                        val binInfo = apiService.getBinInfo(binValue)
+                        val binInfo = binRepository.getBinInfo(binValue)
                         _binInfo.value = binInfo
                     } catch (e: Exception) {
                         _isError.value = e.message

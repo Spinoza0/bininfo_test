@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.spinoza.bininfotest.R
-import com.spinoza.bininfotest.domain.Bin
+import com.spinoza.bininfotest.domain.model.Bin
 
 class HistoryAdapter : ListAdapter<Bin, BinViewHolder>(BinDiffCallback()) {
 

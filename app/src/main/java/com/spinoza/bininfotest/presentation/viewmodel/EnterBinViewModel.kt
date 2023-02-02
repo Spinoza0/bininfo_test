@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.spinoza.bininfotest.domain.Bin
-import com.spinoza.bininfotest.domain.BinInfoDao
+import com.spinoza.bininfotest.domain.model.Bin
+import com.spinoza.bininfotest.domain.repository.HistoryRepository
 import kotlinx.coroutines.launch
 
-class EnterBinViewModel(private val db: BinInfoDao) : ViewModel() {
+class EnterBinViewModel(private val db: HistoryRepository) : ViewModel() {
     val history = db.getHistory()
 
     private val _isError: MutableLiveData<String> = MutableLiveData()

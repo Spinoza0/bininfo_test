@@ -1,4 +1,4 @@
-package com.spinoza.bininfotest.data
+package com.spinoza.bininfotest.data.network
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

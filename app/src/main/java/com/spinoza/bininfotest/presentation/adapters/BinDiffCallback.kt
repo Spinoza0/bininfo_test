@@ -1,7 +1,7 @@
 package com.spinoza.bininfotest.presentation.adapters
 
 import androidx.recyclerview.widget.DiffUtil
-import com.spinoza.bininfotest.domain.Bin
+import com.spinoza.bininfotest.domain.model.Bin
 
 class BinDiffCallback : DiffUtil.ItemCallback<Bin>() {
 

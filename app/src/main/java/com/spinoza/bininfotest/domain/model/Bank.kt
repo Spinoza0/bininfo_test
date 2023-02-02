@@ -1,4 +1,4 @@
-package com.spinoza.bininfotest.domain
+package com.spinoza.bininfotest.domain.model
 
 class Bank (
     var name: String?,
