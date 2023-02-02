@@ -1,6 +1,6 @@
 package com.spinoza.bininfotest.domain.model
 
-class Number(
+class BinNumber(
     var length: Int?,
     var luhn: Boolean?,
 )
