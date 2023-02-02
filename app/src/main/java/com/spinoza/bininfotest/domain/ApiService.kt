@@ -1,7 +1,5 @@
 package com.spinoza.bininfotest.domain
 
-import io.reactivex.rxjava3.core.Single
-
 interface ApiService {
-    fun getBinInfo(bin: String): Single<BinInfo>
+    suspend fun getBinInfo(bin: String): BinInfo
 }

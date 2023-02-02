@@ -3,14 +3,12 @@ package com.spinoza.bininfotest.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.spinoza.bininfotest.domain.Bin
 import com.spinoza.bininfotest.domain.BinInfoDao
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.launch
 
 class EnterBinViewModel(private val db: BinInfoDao) : ViewModel() {
-    private val compositeDisposable = CompositeDisposable()
     val history = db.getHistory()
 
     private val _isError: MutableLiveData<String> = MutableLiveData()
@@ -18,25 +16,16 @@ class EnterBinViewModel(private val db: BinInfoDao) : ViewModel() {
         get() = _isError
 
     fun insertToHistory(bin: Bin) {
-        var needToInsert = true
-        history.value?.let { needToInsert = !it.contains(bin) }
-        if (needToInsert) {
-            val disposable: Disposable = db.insertToHistory(bin)
-                .subscribeOn(Schedulers.io())
-                .subscribe({}) { throwable -> _isError.value = throwable.message }
-            compositeDisposable.add(disposable)
+        viewModelScope.launch {
+            var needToInsert = true
+            history.value?.let { needToInsert = !it.contains(bin) }
+            if (needToInsert) {
+                db.insertToHistory(bin)
+            }
         }
     }
 
     fun clearHistory() {
-        val disposable: Disposable = db.clearHistory()
-            .subscribeOn(Schedulers.io())
-            .subscribe({}) { throwable -> _isError.value = throwable.message }
-        compositeDisposable.add(disposable)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.dispose()
+        viewModelScope.launch { db.clearHistory() }
     }
 }

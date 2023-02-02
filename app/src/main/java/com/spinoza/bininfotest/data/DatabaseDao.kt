@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.spinoza.bininfotest.domain.Bin
 import com.spinoza.bininfotest.domain.BinInfoDao
-import io.reactivex.rxjava3.core.Completable
 
 @Dao
 interface DatabaseDao : BinInfoDao {
@@ -14,8 +13,8 @@ interface DatabaseDao : BinInfoDao {
     override fun getHistory(): LiveData<List<Bin>>
 
     @Insert
-    override fun insertToHistory(bin: Bin): Completable
+    override suspend fun insertToHistory(bin: Bin)
 
     @Query("DELETE FROM bins")
-    override fun clearHistory(): Completable
+    override suspend fun clearHistory()
 }
