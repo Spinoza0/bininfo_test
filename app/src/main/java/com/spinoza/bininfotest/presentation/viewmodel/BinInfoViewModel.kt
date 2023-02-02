@@ -4,11 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.spinoza.bininfotest.domain.repository.BinRepository
 import com.spinoza.bininfotest.domain.model.BinInfo
+import com.spinoza.bininfotest.domain.repository.BinRepository
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class BinInfoViewModel(private val binRepository: BinRepository) : ViewModel() {
+class BinInfoViewModel @Inject constructor(private val binRepository: BinRepository) : ViewModel() {
+
     private val _binInfo = MutableLiveData<BinInfo>()
     private val _isLoading = MutableLiveData(false)
     private val _isError: MutableLiveData<String> = MutableLiveData()

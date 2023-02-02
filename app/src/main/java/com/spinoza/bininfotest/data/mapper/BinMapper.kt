@@ -2,8 +2,9 @@ package com.spinoza.bininfotest.data.mapper
 
 import com.spinoza.bininfotest.data.database.BinDbModel
 import com.spinoza.bininfotest.domain.model.*
+import javax.inject.Inject
 
-class BinMapper {
+class BinMapper @Inject constructor() {
     fun mapEntityToDbModel(bin: Bin) = BinDbModel(bin.value)
     fun mapDbModelToEntity(binDbModel: BinDbModel) = Bin(binDbModel.value)
     fun mapDtoToEntity(binInfoDto: BinInfoDto): BinInfo {
@@ -26,7 +27,7 @@ class BinMapper {
             binInfoDto.bank?.phone,
             binInfoDto.bank?.city,
         )
-        val binInfo = BinInfo(
+        return BinInfo(
             number = number,
             scheme = binInfoDto.scheme,
             type = binInfoDto.type,
@@ -35,6 +36,5 @@ class BinMapper {
             country = country,
             bank = bank
         )
-        return binInfo
     }
 }

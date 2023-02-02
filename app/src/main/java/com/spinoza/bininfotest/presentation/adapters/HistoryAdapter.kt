@@ -5,8 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.spinoza.bininfotest.databinding.ItemHistoryBinding
 import com.spinoza.bininfotest.domain.model.Bin
+import javax.inject.Inject
 
-class HistoryAdapter : ListAdapter<Bin, BinViewHolder>(BinDiffCallback()) {
+class HistoryAdapter @Inject constructor(): ListAdapter<Bin, BinViewHolder>(BinDiffCallback()) {
 
     var onBinClickListener: ((Bin) -> Unit)? = null
 

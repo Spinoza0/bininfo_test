@@ -9,30 +9,36 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.spinoza.bininfotest.R
-import com.spinoza.bininfotest.data.repository.BinRepositoryImpl
 import com.spinoza.bininfotest.databinding.ActivityBinInfoBinding
+import com.spinoza.bininfotest.di.DaggerApplicationComponent
 import com.spinoza.bininfotest.domain.model.Bank
 import com.spinoza.bininfotest.domain.model.BinInfo
 import com.spinoza.bininfotest.domain.model.Country
 import com.spinoza.bininfotest.presentation.viewmodel.BinInfoViewModel
-import com.spinoza.bininfotest.presentation.viewmodel.BinInfoViewModelFactory
+import com.spinoza.bininfotest.presentation.viewmodel.ViewModelFactory
+import javax.inject.Inject
 
 class BinInfoActivity : AppCompatActivity() {
+
+    private val component by lazy {
+        DaggerApplicationComponent.factory().create(this)
+    }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
     private val binding by lazy {
         ActivityBinInfoBinding.inflate(layoutInflater)
     }
 
     private val viewModel by lazy {
-        ViewModelProvider(
-            this,
-            BinInfoViewModelFactory(BinRepositoryImpl())
-        )[BinInfoViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[BinInfoViewModel::class.java]
     }
 
     private val notAvailable by lazy { getString(R.string.notAvailable) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
