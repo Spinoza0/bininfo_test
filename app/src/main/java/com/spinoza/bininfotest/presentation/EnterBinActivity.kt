@@ -6,29 +6,36 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.spinoza.bininfotest.data.repository.HistoryRepositoryImpl
 import com.spinoza.bininfotest.databinding.ActivityEnterBinBinding
+import com.spinoza.bininfotest.di.DaggerApplicationComponent
 import com.spinoza.bininfotest.domain.model.Bin
 import com.spinoza.bininfotest.presentation.adapters.HistoryAdapter
 import com.spinoza.bininfotest.presentation.viewmodel.EnterBinViewModel
-import com.spinoza.bininfotest.presentation.viewmodel.EnterBinViewModelFactory
+import com.spinoza.bininfotest.presentation.viewmodel.ViewModelFactory
+import javax.inject.Inject
 
 class EnterBinActivity : AppCompatActivity() {
+
+    private val component by lazy {
+        DaggerApplicationComponent.factory().create(this)
+    }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    @Inject
+    lateinit var historyAdapter: HistoryAdapter
 
     private val binding by lazy {
         ActivityEnterBinBinding.inflate(layoutInflater)
     }
 
     private val viewModel by lazy {
-        ViewModelProvider(
-            this,
-            EnterBinViewModelFactory(HistoryRepositoryImpl(application))
-        )[EnterBinViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[EnterBinViewModel::class.java]
     }
 
-    private val historyAdapter by lazy { HistoryAdapter() }
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
@@ -76,8 +83,7 @@ class EnterBinActivity : AppCompatActivity() {
 
     private fun showInfoActivity(binValue: String) {
         if (binValue.isNotEmpty()) {
-            val bin = Bin(binValue)
-            viewModel.insertToHistory(bin)
+            viewModel.insertToHistory(Bin(binValue))
             startActivity(BinInfoActivity.newIntent(this, binValue))
         }
     }

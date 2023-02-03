@@ -7,9 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.spinoza.bininfotest.domain.model.Bin
 import com.spinoza.bininfotest.domain.repository.HistoryRepository
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class EnterBinViewModel(private val db: HistoryRepository) : ViewModel() {
-    val history = db.getHistory()
+class EnterBinViewModel @Inject constructor(private val historyRepository: HistoryRepository) :
+    ViewModel() {
+
+    val history = historyRepository.getHistory()
 
     private val _isError: MutableLiveData<String> = MutableLiveData()
     val isError: LiveData<String>
@@ -20,12 +23,12 @@ class EnterBinViewModel(private val db: HistoryRepository) : ViewModel() {
             var needToInsert = true
             history.value?.let { needToInsert = !it.contains(bin) }
             if (needToInsert) {
-                db.insertToHistory(bin)
+                historyRepository.insertToHistory(bin)
             }
         }
     }
 
     fun clearHistory() {
-        viewModelScope.launch { db.clearHistory() }
+        viewModelScope.launch { historyRepository.clearHistory() }
     }
 }
