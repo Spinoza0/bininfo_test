@@ -93,23 +93,24 @@ class BinInfoActivity : AppCompatActivity() {
 
     private fun setCountry(country: Country) {
         with(binding) {
-            viewLanLonLine.visibility = View.VISIBLE
-            textViewCountry.visibility = View.VISIBLE
-            textViewLatLon.visibility = View.VISIBLE
-            textViewNumericAlpha2Emoji.visibility = View.VISIBLE
-            textViewCurrency.visibility = View.VISIBLE
+            turnOnVisibility(textViewCountry, textViewNumericAlpha2Emoji, textViewCurrency)
             val countryName = country.name ?: notAvailable
-            val latitude = country.latitude.toString()
-            val longitude = country.longitude.toString()
             textViewCountry.text = String.format(getString(R.string.country), countryName)
-            textViewLatLon.text =
-                String.format(getString(R.string.lan_lon), latitude, longitude)
-            textViewLatLon.setOnClickListener {
-                openLink(
-                    Intent.ACTION_VIEW, "http://maps.google.com/maps?q=loc:" +
-                            "$latitude,$longitude ($countryName)"
-                )
+
+            if (country.latitude != null && country.longitude != null) {
+                turnOnVisibility(viewLanLonLine, textViewLatLon)
+                val latitude = country.latitude.toString()
+                val longitude = country.longitude.toString()
+                textViewLatLon.text =
+                    String.format(getString(R.string.lan_lon), latitude, longitude)
+                textViewLatLon.setOnClickListener {
+                    openLink(
+                        Intent.ACTION_VIEW, "http://maps.google.com/maps?q=loc:" +
+                                "$latitude,$longitude ($countryName)"
+                    )
+                }
             }
+
             textViewNumericAlpha2Emoji.text = String.format(
                 getString(R.string.numeric_alpha2_emoji),
                 country.numeric ?: notAvailable,
@@ -125,20 +126,13 @@ class BinInfoActivity : AppCompatActivity() {
 
     private fun setBank(bank: Bank) {
         with(binding) {
-            textViewBank.visibility = View.VISIBLE
-            textViewCity.visibility = View.VISIBLE
-            textViewUrl.visibility = View.VISIBLE
-            textViewPhone.visibility = View.VISIBLE
-            textViewBank.text =
-                String.format(getString(R.string.bank), bank.name ?: notAvailable)
-            textViewCity.text = String.format(
-                getString(R.string.city),
-                bank.city ?: notAvailable
-            )
-
+            turnOnVisibility(textViewBank, textViewCity, textViewUrl, textViewPhone)
+            textViewBank.text = String.format(getString(R.string.bank), bank.name ?: notAvailable)
+            textViewCity.text = String.format(getString(R.string.city), bank.city ?: notAvailable)
             textViewUrl.text = String.format("Url: %s", bank.url ?: notAvailable)
+
             bank.url?.let { url ->
-                viewUrlLine.visibility = View.VISIBLE
+                turnOnVisibility(viewUrlLine)
                 textViewUrl.setOnClickListener {
                     openLink(Intent.ACTION_VIEW, "https://${url}")
                 }
@@ -148,7 +142,7 @@ class BinInfoActivity : AppCompatActivity() {
                 bank.phone ?: notAvailable
             )
             bank.phone?.let { phone ->
-                viewPhoneLine.visibility = View.VISIBLE
+                turnOnVisibility(viewPhoneLine)
                 textViewPhone.setOnClickListener {
                     openLink(Intent.ACTION_DIAL, "tel:${phone}")
                 }
@@ -172,6 +166,10 @@ class BinInfoActivity : AppCompatActivity() {
                 )
             )
         }
+    }
+
+    private fun turnOnVisibility(vararg views: View) {
+        views.toList().forEach { it.visibility = View.VISIBLE }
     }
 
     companion object {
