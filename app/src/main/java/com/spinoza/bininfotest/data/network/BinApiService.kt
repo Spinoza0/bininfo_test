@@ -6,5 +6,9 @@ import retrofit2.http.Path
 
 interface BinApiService {
     @GET("{bin}")
-    suspend fun getBinInfo(@Path("bin") bin: String): BinInfoDto
+    suspend fun getBinInfo(@Path(QUERY_PATH) bin: String): BinInfoDto
+
+    companion object {
+        private const val QUERY_PATH = "bin"
+    }
 }
