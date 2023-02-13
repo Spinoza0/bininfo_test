@@ -12,7 +12,7 @@ import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
-object BinApiFactory {
+object ApiFactory {
     private const val BASE_URL = "https://lookup.binlist.net/"
     // fix: "CertPathValidatorException: Trust anchor for certificate path not found"
     // for old android versions:
@@ -31,7 +31,7 @@ object BinApiFactory {
     }
 
     @JvmField
-    val apiService: BinApiService = retrofit.create(BinApiService::class.java)
+    val apiService: ApiService = retrofit.create(ApiService::class.java)
 
     private fun getUnsafeOkHttpClient(): OkHttpClient.Builder {
         return try {
