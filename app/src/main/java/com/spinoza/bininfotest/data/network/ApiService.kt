@@ -4,7 +4,7 @@ import com.spinoza.bininfotest.domain.model.BinInfoDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface BinApiService {
+interface ApiService {
     @GET("{bin}")
     suspend fun getBinInfo(@Path(QUERY_PATH) bin: String): BinInfoDto
 

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">BinInfo</string>
     <string name="show_info">Show info</string>
-    <string name="enter_bin">Enter the first 8 digits of a card number (BIN/IIN)</string>
+    <string name="enter_bin">Enter the first 8 digits of a card number</string>
     <string name="clear_history">Clear the history</string>
     <string name="notAvailable">n/a</string>
     <string name="scheme">Scheme/Network: %s</string>
