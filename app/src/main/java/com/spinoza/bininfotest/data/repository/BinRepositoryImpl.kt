@@ -1,6 +1,7 @@
 package com.spinoza.bininfotest.data.repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.spinoza.bininfotest.data.database.HistoryDao
 import com.spinoza.bininfotest.data.mapper.BinMapper
@@ -16,19 +17,40 @@ class BinRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
 ) : BinRepository {
 
-    override suspend fun getBinInfo(bin: String): BinInfo =
-        mapper.mapDtoToEntity(apiService.getBinInfo(bin))
+    private val binInfo = MutableLiveData<BinInfo>()
+    private val error = MutableLiveData<String>()
+    private val isLoading = MutableLiveData(false)
 
-    override fun getHistory(): LiveData<List<Bin>> =
+    override fun getBinInfo(): LiveData<BinInfo> = binInfo
+    override fun isError() = error
+    override fun isLoading() = isLoading
+
+    override suspend fun loadBinInfo(bin: String) {
+        if (isLoading.value == false) {
+            isLoading.value = true
+            val response = apiService.getBinInfo(bin)
+            isLoading.value = false
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    binInfo.value = mapper.mapDtoToEntity(it)
+                }
+            } else {
+                val errorBody = response.errorBody()?.string() ?: ""
+                error.value = "${response.code()} $errorBody"
+            }
+        }
+    }
+
+    override fun getBinsHistory(): LiveData<List<Bin>> =
         Transformations.map(historyDao.getHistory()) { list ->
             list.map { mapper.mapDbModelToEntity(it) }
         }
 
-    override suspend fun insertToHistory(bin: Bin) {
+    override suspend fun insertBinToHistory(bin: Bin) {
         historyDao.insertToHistory(mapper.mapEntityToDbModel(bin))
     }
 
-    override suspend fun clearHistory() {
+    override suspend fun clearBinsHistory() {
         historyDao.clearHistory()
     }
 }

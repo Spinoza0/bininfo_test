@@ -5,8 +5,11 @@ import com.spinoza.bininfotest.domain.model.Bin
 import com.spinoza.bininfotest.domain.model.BinInfo
 
 interface BinRepository {
-    suspend fun getBinInfo(bin: String): BinInfo
-    fun getHistory(): LiveData<List<Bin>>
-    suspend fun insertToHistory(bin: Bin)
-    suspend fun clearHistory()
+    fun getBinInfo(): LiveData<BinInfo>
+    suspend fun loadBinInfo(bin: String)
+    fun getBinsHistory(): LiveData<List<Bin>>
+    suspend fun insertBinToHistory(bin: Bin)
+    suspend fun clearBinsHistory()
+    fun isError(): LiveData<String>
+    fun isLoading(): LiveData<Boolean>
 }
