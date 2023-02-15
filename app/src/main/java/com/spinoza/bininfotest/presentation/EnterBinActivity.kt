@@ -6,6 +6,8 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.spinoza.bininfotest.databinding.ActivityEnterBinBinding
 import com.spinoza.bininfotest.di.DaggerApplicationComponent
 import com.spinoza.bininfotest.domain.model.Bin
@@ -34,21 +36,41 @@ class EnterBinActivity : AppCompatActivity() {
         ViewModelProvider(this, viewModelFactory)[EnterBinViewModel::class.java]
     }
 
+    private val itemTouchHelper by lazy {
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder,
+            ): Boolean = false
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                viewModel.removeFromHistory(historyAdapter.currentList[viewHolder.adapterPosition])
+            }
+        })
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         component.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        binding.recyclerViewHistory.adapter = historyAdapter
-
-        setListeners()
-        setObservers()
+        setupRecyclerView()
+        setupListeners()
+        setupObservers()
     }
 
-    private fun setListeners() {
-        with(binding) {
-            historyAdapter.onBinClickListener = { showInfoActivity(it.value) }
+    private fun setupRecyclerView() {
+        binding.recyclerViewHistory.adapter = historyAdapter
+        itemTouchHelper.attachToRecyclerView(binding.recyclerViewHistory)
+        historyAdapter.onBinClickListener = { showInfoActivity(it.value) }
+    }
 
+    private fun setupListeners() {
+        with(binding) {
             editTextBin.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     showInfoActivity(editTextBin.text.toString())
@@ -65,7 +87,7 @@ class EnterBinActivity : AppCompatActivity() {
         }
     }
 
-    private fun setObservers() {
+    private fun setupObservers() {
         viewModel.history.observe(this) {
             setHistoryVisibility(it.isEmpty())
             historyAdapter.submitList(it)

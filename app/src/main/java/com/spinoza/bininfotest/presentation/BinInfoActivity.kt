@@ -45,7 +45,7 @@ class BinInfoActivity : AppCompatActivity() {
         if (intent.hasExtra(EXTRA_BIN)) {
             intent.getStringExtra(EXTRA_BIN)?.let {
                 setObservers(it)
-                viewModel.load(it)
+                viewModel.loadBinInfo(it)
             }
         } else {
             finish()
