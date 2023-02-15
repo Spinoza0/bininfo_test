@@ -50,6 +50,10 @@ class BinRepositoryImpl @Inject constructor(
         historyDao.insertToHistory(mapper.mapEntityToDbModel(bin))
     }
 
+    override suspend fun removeBinFromHistory(bin: Bin) {
+        historyDao.removeFromHistory(bin.value)
+    }
+
     override suspend fun clearBinsHistory() {
         historyDao.clearHistory()
     }

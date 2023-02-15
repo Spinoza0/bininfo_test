@@ -10,6 +10,6 @@
         android:layout_width="match_parent"
         tools:text="@tools:sample/us_zipcodes"
         android:layout_margin="8dp"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:layout_height="wrap_content" />
 </LinearLayout>

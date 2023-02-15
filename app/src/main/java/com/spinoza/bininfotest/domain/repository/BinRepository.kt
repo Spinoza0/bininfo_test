@@ -9,6 +9,7 @@ interface BinRepository {
     suspend fun loadBinInfo(bin: String)
     fun getBinsHistory(): LiveData<List<Bin>>
     suspend fun insertBinToHistory(bin: Bin)
+    suspend fun removeBinFromHistory(bin: Bin)
     suspend fun clearBinsHistory()
     fun isError(): LiveData<String>
     fun isLoading(): LiveData<Boolean>

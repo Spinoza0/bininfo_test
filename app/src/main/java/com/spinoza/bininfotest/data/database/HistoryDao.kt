@@ -3,16 +3,24 @@ package com.spinoza.bininfotest.data.database
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
 interface HistoryDao {
-    @Query("SELECT * FROM bins ORDER BY value")
+    @Query("SELECT * FROM $TABLE_HISTORY ORDER BY value")
     fun getHistory(): LiveData<List<BinDbModel>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertToHistory(bin: BinDbModel)
 
-    @Query("DELETE FROM bins")
+    @Query("DELETE FROM $TABLE_HISTORY WHERE value=:value")
+    suspend fun removeFromHistory(value: String)
+
+    @Query("DELETE FROM $TABLE_HISTORY")
     suspend fun clearHistory()
+
+    companion object {
+        const val TABLE_HISTORY = "bins"
+    }
 }

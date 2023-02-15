@@ -15,11 +15,13 @@ class EnterBinViewModel @Inject constructor(private val binRepository: BinReposi
 
     fun insertToHistory(bin: Bin) {
         viewModelScope.launch {
-            var needToInsert = true
-            history.value?.let { needToInsert = !it.contains(bin) }
-            if (needToInsert) {
-                binRepository.insertBinToHistory(bin)
-            }
+            binRepository.insertBinToHistory(bin)
+        }
+    }
+
+    fun removeFromHistory(bin: Bin) {
+        viewModelScope.launch {
+            binRepository.removeBinFromHistory(bin)
         }
     }
 
