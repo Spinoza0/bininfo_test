@@ -2,13 +2,12 @@ package com.spinoza.bininfotest.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import com.spinoza.bininfotest.data.database.HistoryDao
 import com.spinoza.bininfotest.data.mapper.BinMapper
 import com.spinoza.bininfotest.data.network.ApiService
 import com.spinoza.bininfotest.domain.model.Bin
-import com.spinoza.bininfotest.domain.model.BinInfo
 import com.spinoza.bininfotest.domain.repository.BinRepository
+import com.spinoza.bininfotest.domain.repository.State
 import javax.inject.Inject
 
 class BinRepositoryImpl @Inject constructor(
@@ -17,44 +16,62 @@ class BinRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
 ) : BinRepository {
 
-    private val binInfo = MutableLiveData<BinInfo>()
-    private val error = MutableLiveData<String>()
-    private val isLoading = MutableLiveData(false)
-
-    override fun getBinInfo(): LiveData<BinInfo> = binInfo
-    override fun isError() = error
-    override fun isLoading() = isLoading
+    private val state = MutableLiveData<State>()
+    override fun getState(): LiveData<State> = state
 
     override suspend fun loadBinInfo(binValue: String) {
-        if (isLoading.value == false) {
-            isLoading.value = true
+        if (state.value != State.Loading) {
+            state.value = State.Loading
             val response = apiService.getBinInfo(binValue)
-            isLoading.value = false
             if (response.isSuccessful) {
                 response.body()?.let {
-                    binInfo.value = mapper.mapDtoToEntity(it)
+                    state.value = State.BinInfoData(mapper.mapDtoToEntity(it))
                 }
             } else {
                 val errorBody = response.errorBody()?.string() ?: ""
-                error.value = "${response.code()} $errorBody"
+                state.value = State.Error("${response.code()} $errorBody")
             }
         }
     }
 
-    override fun getBinsHistory(): LiveData<List<Bin>> =
-        Transformations.map(historyDao.getHistory()) { list ->
-            list.map { mapper.mapDbModelToEntity(it) }
+    override suspend fun getBinsHistory() {
+        runCatching {
+            state.value = State.BinsHistory(mapper.mapDbModelToEntity(historyDao.getHistory()))
+        }.onFailure {
+            state.value = State.Error(getErrorText(it))
         }
+    }
 
     override suspend fun insertBinToHistory(bin: Bin) {
-        historyDao.insertToHistory(mapper.mapEntityToDbModel(bin))
+        kotlin.runCatching {
+            historyDao.insertToHistory(mapper.mapEntityToDbModel(bin))
+
+        }.onSuccess {
+            getBinsHistory()
+        }.onFailure {
+            state.value = State.Error(getErrorText(it))
+        }
     }
 
     override suspend fun removeBinFromHistory(bin: Bin) {
-        historyDao.removeFromHistory(bin.value)
+        kotlin.runCatching {
+            historyDao.removeFromHistory(bin.value)
+        }.onSuccess {
+            getBinsHistory()
+        }.onFailure {
+            state.value = State.Error(getErrorText(it))
+        }
     }
 
     override suspend fun clearBinsHistory() {
-        historyDao.clearHistory()
+        kotlin.runCatching {
+            historyDao.clearHistory()
+        }.onSuccess {
+            getBinsHistory()
+        }.onFailure {
+            state.value = State.Error(getErrorText(it))
+        }
     }
+
+    private fun getErrorText(e: Throwable) = e.localizedMessage ?: e.message ?: e.toString()
 }

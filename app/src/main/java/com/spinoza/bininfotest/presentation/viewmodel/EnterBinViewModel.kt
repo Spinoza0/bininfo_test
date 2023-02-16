@@ -8,15 +8,20 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class EnterBinViewModel @Inject constructor(
+    getStateUseCase: GetStateUseCase,
     getBinsHistoryUseCase: GetBinsHistoryUseCase,
-    isErrorUseCase: IsErrorUseCase,
     private val insertBinToHistoryUseCase: InsertBinToHistoryUseCase,
     private val removeBinFromHistoryUseCase: RemoveBinFromHistoryUseCase,
-    private val cleanBinsHistoryUseCase: CleanBinsHistoryUseCase,
+    private val clearBinsHistoryUseCase: ClearBinsHistoryUseCase,
 ) : ViewModel() {
 
-    val history = getBinsHistoryUseCase()
-    val isError = isErrorUseCase()
+    val state = getStateUseCase()
+
+    init {
+        viewModelScope.launch {
+            getBinsHistoryUseCase()
+        }
+    }
 
     fun insertToHistory(bin: Bin) {
         viewModelScope.launch {
@@ -31,6 +36,6 @@ class EnterBinViewModel @Inject constructor(
     }
 
     fun clearHistory() {
-        viewModelScope.launch { cleanBinsHistoryUseCase }
+        viewModelScope.launch { clearBinsHistoryUseCase }
     }
 }

@@ -6,7 +6,10 @@ import javax.inject.Inject
 
 class BinMapper @Inject constructor() {
     fun mapEntityToDbModel(bin: Bin) = BinDbModel(bin.value)
-    fun mapDbModelToEntity(binDbModel: BinDbModel) = Bin(binDbModel.value)
+    private fun mapDbModelToEntity(binDbModel: BinDbModel) = Bin(binDbModel.value)
+    fun mapDbModelToEntity(binDbModelList: List<BinDbModel>) = binDbModelList.map {
+        mapDbModelToEntity(it)
+    }
     fun mapDtoToEntity(binInfoDto: BinInfoDto): BinInfo {
         val number = BinNumber(
             binInfoDto.number?.length,
