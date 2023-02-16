@@ -3,29 +3,34 @@ package com.spinoza.bininfotest.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.spinoza.bininfotest.domain.model.Bin
-import com.spinoza.bininfotest.domain.repository.BinRepository
+import com.spinoza.bininfotest.domain.usecase.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class EnterBinViewModel @Inject constructor(private val binRepository: BinRepository) :
-    ViewModel() {
+class EnterBinViewModel @Inject constructor(
+    getBinsHistoryUseCase: GetBinsHistoryUseCase,
+    isErrorUseCase: IsErrorUseCase,
+    private val insertBinToHistoryUseCase: InsertBinToHistoryUseCase,
+    private val removeBinFromHistoryUseCase: RemoveBinFromHistoryUseCase,
+    private val cleanBinsHistoryUseCase: CleanBinsHistoryUseCase,
+) : ViewModel() {
 
-    val history = binRepository.getBinsHistory()
-    val isError = binRepository.isError()
+    val history = getBinsHistoryUseCase()
+    val isError = isErrorUseCase()
 
     fun insertToHistory(bin: Bin) {
         viewModelScope.launch {
-            binRepository.insertBinToHistory(bin)
+            insertBinToHistoryUseCase(bin)
         }
     }
 
     fun removeFromHistory(bin: Bin) {
         viewModelScope.launch {
-            binRepository.removeBinFromHistory(bin)
+            removeBinFromHistoryUseCase(bin)
         }
     }
 
     fun clearHistory() {
-        viewModelScope.launch { binRepository.clearBinsHistory() }
+        viewModelScope.launch { cleanBinsHistoryUseCase }
     }
 }

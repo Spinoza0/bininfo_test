@@ -25,10 +25,10 @@ class BinRepositoryImpl @Inject constructor(
     override fun isError() = error
     override fun isLoading() = isLoading
 
-    override suspend fun loadBinInfo(bin: String) {
+    override suspend fun loadBinInfo(binValue: String) {
         if (isLoading.value == false) {
             isLoading.value = true
-            val response = apiService.getBinInfo(bin)
+            val response = apiService.getBinInfo(binValue)
             isLoading.value = false
             if (response.isSuccessful) {
                 response.body()?.let {
