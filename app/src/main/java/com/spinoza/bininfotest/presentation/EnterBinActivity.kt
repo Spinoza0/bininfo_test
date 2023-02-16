@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.spinoza.bininfotest.databinding.ActivityEnterBinBinding
 import com.spinoza.bininfotest.di.DaggerApplicationComponent
 import com.spinoza.bininfotest.domain.model.Bin
+import com.spinoza.bininfotest.domain.repository.State
 import com.spinoza.bininfotest.presentation.adapters.HistoryAdapter
 import com.spinoza.bininfotest.presentation.viewmodel.EnterBinViewModel
 import com.spinoza.bininfotest.presentation.viewmodel.ViewModelFactory
@@ -88,12 +89,13 @@ class EnterBinActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
-        viewModel.history.observe(this) {
-            setHistoryVisibility(it.isEmpty())
-            historyAdapter.submitList(it)
-        }
-        viewModel.isError.observe(this) {
-            Toast.makeText(this@EnterBinActivity, it, Toast.LENGTH_LONG).show()
+        viewModel.state.observe(this) {
+            if (it is State.BinsHistory) {
+                setHistoryVisibility(it.value.isEmpty())
+                historyAdapter.submitList(it.value)
+            } else if (it is State.Error) {
+                Toast.makeText(this@EnterBinActivity, it.value, Toast.LENGTH_LONG).show()
+            }
         }
     }
 

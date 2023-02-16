@@ -1,6 +1,5 @@
 package com.spinoza.bininfotest.data.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -9,7 +8,7 @@ import androidx.room.Query
 @Dao
 interface HistoryDao {
     @Query("SELECT * FROM $TABLE_HISTORY ORDER BY value")
-    fun getHistory(): LiveData<List<BinDbModel>>
+    suspend fun getHistory(): List<BinDbModel>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertToHistory(bin: BinDbModel)
