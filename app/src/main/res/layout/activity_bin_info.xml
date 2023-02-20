@@ -90,15 +90,6 @@
                     tools:text="Latitude, longitude"
                     tools:visibility="visible" />
 
-                <View
-                    android:id="@+id/viewLanLonLine"
-                    android:layout_width="wrap_content"
-                    android:layout_height="2dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@android:color/holo_blue_dark"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
-
                 <TextView
                     android:id="@+id/textViewNumericAlpha2Emoji"
                     android:layout_width="match_parent"
@@ -149,15 +140,6 @@
                     tools:text="Url"
                     tools:visibility="visible" />
 
-                <View
-                    android:id="@+id/viewUrlLine"
-                    android:layout_width="wrap_content"
-                    android:layout_height="2dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@android:color/holo_blue_dark"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
-
                 <TextView
                     android:id="@+id/textViewPhone"
                     android:layout_width="match_parent"
@@ -166,15 +148,6 @@
                     android:textSize="16sp"
                     android:visibility="gone"
                     tools:text="Phone"
-                    tools:visibility="visible" />
-
-                <View
-                    android:id="@+id/viewPhoneLine"
-                    android:layout_width="wrap_content"
-                    android:layout_height="2dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@android:color/holo_blue_dark"
-                    android:visibility="gone"
                     tools:visibility="visible" />
 
             </LinearLayout>

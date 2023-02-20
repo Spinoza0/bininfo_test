@@ -2,9 +2,11 @@ package com.spinoza.bininfotest.presentation
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -105,7 +107,7 @@ class BinInfoActivity : AppCompatActivity() {
             textViewCountry.text = String.format(getString(R.string.country), countryName)
 
             if (country.latitude != null && country.longitude != null) {
-                turnOnVisibility(viewLanLonLine, textViewLatLon)
+                turnOnVisibility(textViewLatLon)
                 val latitude = country.latitude.toString()
                 val longitude = country.longitude.toString()
                 textViewLatLon.text =
@@ -116,6 +118,7 @@ class BinInfoActivity : AppCompatActivity() {
                                 "$latitude,$longitude ($countryName)"
                     )
                 }
+                setTextViewUnderlined(textViewLatLon)
             }
 
             textViewNumericAlpha2Emoji.text = String.format(
@@ -139,7 +142,7 @@ class BinInfoActivity : AppCompatActivity() {
             textViewUrl.text = String.format("Url: %s", bank.url ?: notAvailable)
 
             bank.url?.let { url ->
-                turnOnVisibility(viewUrlLine)
+                setTextViewUnderlined(textViewUrl)
                 textViewUrl.setOnClickListener {
                     openLink(Intent.ACTION_VIEW, "https://${url}")
                 }
@@ -149,7 +152,7 @@ class BinInfoActivity : AppCompatActivity() {
                 bank.phone ?: notAvailable
             )
             bank.phone?.let { phone ->
-                turnOnVisibility(viewPhoneLine)
+                setTextViewUnderlined(textViewPhone)
                 textViewPhone.setOnClickListener {
                     openLink(Intent.ACTION_DIAL, "tel:${phone}")
                 }
@@ -173,6 +176,10 @@ class BinInfoActivity : AppCompatActivity() {
                 )
             )
         }
+    }
+
+    private fun setTextViewUnderlined(textView: TextView) {
+        textView.paintFlags = textView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
     }
 
     private fun turnOnVisibility(vararg views: View) {
