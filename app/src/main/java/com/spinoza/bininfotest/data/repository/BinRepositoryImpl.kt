@@ -22,14 +22,18 @@ class BinRepositoryImpl @Inject constructor(
     override suspend fun loadBinInfo(binValue: String) {
         if (state.value != State.Loading) {
             state.value = State.Loading
-            val response = apiService.getBinInfo(binValue)
-            if (response.isSuccessful) {
-                response.body()?.let {
-                    state.value = State.BinInfoData(mapper.mapDtoToEntity(it))
+            runCatching {
+                val response = apiService.getBinInfo(binValue)
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        state.value = State.BinInfoData(mapper.mapDtoToEntity(it))
+                    }
+                } else {
+                    val errorBody = response.errorBody()?.string() ?: ""
+                    state.value = State.Error("${response.code()} $errorBody")
                 }
-            } else {
-                val errorBody = response.errorBody()?.string() ?: ""
-                state.value = State.Error("${response.code()} $errorBody")
+            }.onFailure {
+                state.value = State.Error(getErrorText(it))
             }
         }
     }
@@ -43,7 +47,7 @@ class BinRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insertBinToHistory(bin: Bin) {
-        kotlin.runCatching {
+        runCatching {
             historyDao.insertToHistory(mapper.mapEntityToDbModel(bin))
 
         }.onSuccess {
@@ -54,7 +58,7 @@ class BinRepositoryImpl @Inject constructor(
     }
 
     override suspend fun removeBinFromHistory(bin: Bin) {
-        kotlin.runCatching {
+        runCatching {
             historyDao.removeFromHistory(bin.value)
         }.onSuccess {
             getBinsHistory()
@@ -64,7 +68,7 @@ class BinRepositoryImpl @Inject constructor(
     }
 
     override suspend fun clearBinsHistory() {
-        kotlin.runCatching {
+        runCatching {
             historyDao.clearHistory()
         }.onSuccess {
             getBinsHistory()
