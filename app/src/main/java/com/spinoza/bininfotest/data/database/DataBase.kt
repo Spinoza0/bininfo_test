@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [BinDbModel::class], version = 1, exportSchema = false)
 abstract class DataBase : RoomDatabase() {
+
     companion object {
         private const val DB_NAME = "bininfotest.db"
         private var db: DataBase? = null

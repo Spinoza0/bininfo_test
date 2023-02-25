@@ -6,17 +6,16 @@ import com.spinoza.bininfotest.presentation.viewmodel.EnterBinViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
-import dagger.multibindings.StringKey
 
 @Module
 interface ViewModelModule {
     @IntoMap
-    @StringKey("BinInfoViewModel")
+    @ViewModelKey(BinInfoViewModel::class)
     @Binds
     fun bindBinInfoViewModel(impl: BinInfoViewModel): ViewModel
 
     @IntoMap
-    @StringKey("EnterBinViewModel")
+    @ViewModelKey(EnterBinViewModel::class)
     @Binds
     fun bindEnterBinViewModel(impl: EnterBinViewModel): ViewModel
 }

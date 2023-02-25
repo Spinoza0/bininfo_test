@@ -5,5 +5,6 @@ import com.spinoza.bininfotest.domain.repository.BinRepository
 import javax.inject.Inject
 
 class InsertBinToHistoryUseCase @Inject constructor(private val binRepository: BinRepository) {
+
     suspend operator fun invoke(bin: Bin) = binRepository.insertBinToHistory(bin)
 }

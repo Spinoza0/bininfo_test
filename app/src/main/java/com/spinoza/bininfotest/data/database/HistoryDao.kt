@@ -7,6 +7,7 @@ import androidx.room.Query
 
 @Dao
 interface HistoryDao {
+
     @Query("SELECT * FROM $TABLE_HISTORY ORDER BY value")
     suspend fun getHistory(): List<BinDbModel>
 

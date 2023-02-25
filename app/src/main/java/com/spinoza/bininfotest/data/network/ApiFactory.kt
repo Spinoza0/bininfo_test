@@ -13,6 +13,7 @@ import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
 object ApiFactory {
+
     private const val BASE_URL = "https://lookup.binlist.net/"
     // fix: "CertPathValidatorException: Trust anchor for certificate path not found"
     // for old android versions:

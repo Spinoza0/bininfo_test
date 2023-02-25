@@ -38,8 +38,6 @@ class BinInfoActivity : AppCompatActivity() {
         ViewModelProvider(this, viewModelFactory)[BinInfoViewModel::class.java]
     }
 
-    private val notAvailable by lazy { getString(R.string.notAvailable) }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         component.inject(this)
         super.onCreate(savedInstanceState)
@@ -71,36 +69,38 @@ class BinInfoActivity : AppCompatActivity() {
     }
 
     private fun setContent(binValue: String, binInfo: BinInfo) {
-        with(binding) {
-            with(binInfo) {
-                textViewBin.text = String.format(getString(R.string.bin), binValue)
-                textViewScheme.text =
-                    String.format(getString(R.string.scheme), scheme ?: notAvailable)
-                textViewBrand.text = String.format(getString(R.string.brand), brand ?: notAvailable)
-                if (number == null) {
-                    textViewCardNumberLengthLuhn.visibility = View.GONE
-                } else number?.let {
-                    textViewCardNumberLengthLuhn.text =
-                        String.format(
-                            getString(R.string.length_luhn),
-                            it.length?.toString() ?: notAvailable,
-                            it.luhn?.toString() ?: notAvailable
-                        )
-                }
+        val notAvailable = getString(R.string.notAvailable)
 
-                textViewTypePrepaid.text = String.format(
-                    getString(R.string.type_prepaid),
-                    type ?: notAvailable,
-                    prepaid?.toString() ?: notAvailable
-                )
-
-                country?.let { setCountry(it) }
-                bank?.let { setBank(it) }
+        with(binInfo) {
+            binding.textViewBin.text = String.format(getString(R.string.bin), binValue)
+            binding.textViewScheme.text =
+                String.format(getString(R.string.scheme), scheme ?: notAvailable)
+            binding.textViewBrand.text =
+                String.format(getString(R.string.brand), brand ?: notAvailable)
+            if (number == null) {
+                binding.textViewCardNumberLengthLuhn.visibility = View.GONE
+            } else number?.let {
+                binding.textViewCardNumberLengthLuhn.text =
+                    String.format(
+                        getString(R.string.length_luhn),
+                        it.length?.toString() ?: notAvailable,
+                        it.luhn?.toString() ?: notAvailable
+                    )
             }
+
+            binding.textViewTypePrepaid.text = String.format(
+                getString(R.string.type_prepaid),
+                type ?: notAvailable,
+                prepaid?.toString() ?: notAvailable
+            )
+
+            country?.let { setCountry(it, notAvailable) }
+            bank?.let { setBank(it, notAvailable) }
         }
+
     }
 
-    private fun setCountry(country: Country) {
+    private fun setCountry(country: Country, notAvailable: String) {
         with(binding) {
             turnOnVisibility(textViewCountry, textViewNumericAlpha2Emoji, textViewCurrency)
             val countryName = country.name ?: notAvailable
@@ -134,7 +134,7 @@ class BinInfoActivity : AppCompatActivity() {
         }
     }
 
-    private fun setBank(bank: Bank) {
+    private fun setBank(bank: Bank, notAvailable: String) {
         with(binding) {
             turnOnVisibility(textViewBank, textViewCity, textViewUrl, textViewPhone)
             textViewBank.text = String.format(getString(R.string.bank), bank.name ?: notAvailable)
@@ -190,9 +190,7 @@ class BinInfoActivity : AppCompatActivity() {
         private const val EXTRA_BIN = "bin"
 
         fun newIntent(context: Context, binValue: String): Intent {
-            return Intent(context, BinInfoActivity::class.java).apply {
-                putExtra(EXTRA_BIN, binValue)
-            }
+            return Intent(context, BinInfoActivity::class.java).putExtra(EXTRA_BIN, binValue)
         }
     }
 }
