@@ -16,7 +16,7 @@ import com.spinoza.bininfotest.di.DaggerApplicationComponent
 import com.spinoza.bininfotest.domain.model.Bank
 import com.spinoza.bininfotest.domain.model.BinInfo
 import com.spinoza.bininfotest.domain.model.Country
-import com.spinoza.bininfotest.domain.repository.State
+import com.spinoza.bininfotest.domain.repository.BinState
 import com.spinoza.bininfotest.presentation.viewmodel.BinInfoViewModel
 import com.spinoza.bininfotest.presentation.viewmodel.ViewModelFactory
 import javax.inject.Inject
@@ -55,13 +55,13 @@ class BinInfoActivity : AppCompatActivity() {
 
     private fun setObservers(binValue: String) {
         viewModel.state.observe(this) {
-            if (it is State.Loading) {
+            if (it is BinState.Loading) {
                 binding.progressBar.visibility = View.VISIBLE
             } else {
                 binding.progressBar.visibility = View.GONE
-                if (it is State.Error) {
+                if (it is BinState.Error) {
                     showError(binValue, it.value)
-                } else if (it is State.BinInfoData) {
+                } else if (it is BinState.BinInfoData) {
                     setContent(binValue, it.value)
                 }
             }

@@ -5,7 +5,7 @@ import com.spinoza.bininfotest.domain.model.Bin
 
 interface BinRepository {
 
-    fun getState(): LiveData<State>
+    fun getState(): LiveData<BinState>
 
     suspend fun loadBinInfo(binValue: String)
 

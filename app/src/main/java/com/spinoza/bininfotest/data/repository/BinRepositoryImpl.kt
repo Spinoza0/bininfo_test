@@ -7,7 +7,7 @@ import com.spinoza.bininfotest.data.mapper.BinMapper
 import com.spinoza.bininfotest.data.network.ApiService
 import com.spinoza.bininfotest.domain.model.Bin
 import com.spinoza.bininfotest.domain.repository.BinRepository
-import com.spinoza.bininfotest.domain.repository.State
+import com.spinoza.bininfotest.domain.repository.BinState
 import javax.inject.Inject
 
 class BinRepositoryImpl @Inject constructor(
@@ -16,33 +16,33 @@ class BinRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
 ) : BinRepository {
 
-    private val state = MutableLiveData<State>()
-    override fun getState(): LiveData<State> = state
+    private val state = MutableLiveData<BinState>()
+    override fun getState(): LiveData<BinState> = state
 
     override suspend fun loadBinInfo(binValue: String) {
-        if (state.value != State.Loading) {
-            state.value = State.Loading
+        if (state.value != BinState.Loading) {
+            state.value = BinState.Loading
             runCatching {
                 val response = apiService.getBinInfo(binValue)
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        state.value = State.BinInfoData(mapper.mapDtoToEntity(it))
+                        state.value = BinState.BinInfoData(mapper.mapDtoToEntity(it))
                     }
                 } else {
                     val errorBody = response.errorBody()?.string() ?: ""
-                    state.value = State.Error("${response.code()} $errorBody")
+                    state.value = BinState.Error("${response.code()} $errorBody")
                 }
             }.onFailure {
-                state.value = State.Error(getErrorText(it))
+                state.value = BinState.Error(getErrorText(it))
             }
         }
     }
 
     override suspend fun getBinsHistory() {
         runCatching {
-            state.value = State.BinsHistory(mapper.mapDbModelToEntity(historyDao.getHistory()))
+            state.value = BinState.BinsHistory(mapper.mapDbModelToEntity(historyDao.getHistory()))
         }.onFailure {
-            state.value = State.Error(getErrorText(it))
+            state.value = BinState.Error(getErrorText(it))
         }
     }
 
@@ -53,7 +53,7 @@ class BinRepositoryImpl @Inject constructor(
         }.onSuccess {
             getBinsHistory()
         }.onFailure {
-            state.value = State.Error(getErrorText(it))
+            state.value = BinState.Error(getErrorText(it))
         }
     }
 
@@ -63,7 +63,7 @@ class BinRepositoryImpl @Inject constructor(
         }.onSuccess {
             getBinsHistory()
         }.onFailure {
-            state.value = State.Error(getErrorText(it))
+            state.value = BinState.Error(getErrorText(it))
         }
     }
 
@@ -73,7 +73,7 @@ class BinRepositoryImpl @Inject constructor(
         }.onSuccess {
             getBinsHistory()
         }.onFailure {
-            state.value = State.Error(getErrorText(it))
+            state.value = BinState.Error(getErrorText(it))
         }
     }
 
